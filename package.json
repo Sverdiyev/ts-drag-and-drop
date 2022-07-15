@@ -1,5 +1,5 @@
 {
-  "name": "typescript",
+  "name": "ts-drag-and-drop",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {

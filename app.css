@@ -124,4 +124,6 @@ button:active {
   padding: 1rem;
   border: 1px solid #ff0062;
   background: #f7f7f7;
+  display: inline-block;
+  width: 32rem;
 }

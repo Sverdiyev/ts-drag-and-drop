@@ -27,10 +27,25 @@ class ProjectInput {
 
   private submitHandler(e: Event) {
     e.preventDefault();
-    console.log(this.titleInputEl.value);
+    const userInput = this.gatherInputs();
+
+    this.clearInputs();
   }
   private configure() {
     this.formEl.addEventListener('submit', this.submitHandler.bind(this));
+  }
+
+  private gatherInputs(): [string, string, number] {
+    const title = this.titleInputEl.value;
+    const description = this.descriptionInputEl.value;
+    const people = this.descriptionInputEl.value;
+    return [title, description, +people];
+  }
+
+  private clearInputs() {
+    this.titleInputEl.value = '';
+    this.descriptionInputEl.value = '';
+    this.peopleInputEl.value = '';
   }
 
   private attach() {

@@ -28,6 +28,7 @@ class ProjectInput {
   private submitHandler(e: Event) {
     e.preventDefault();
     const userInput = this.gatherInputs();
+    console.log('🚀 ~ submitHandler ~ userInput', userInput);
 
     this.clearInputs();
   }
@@ -53,4 +54,35 @@ class ProjectInput {
   }
 }
 
+class ProjectList {
+  templateEl: HTMLTemplateElement;
+  hostEl: HTMLDivElement;
+  listElement: HTMLElement;
+
+  constructor(private type: 'active' | 'finished') {
+    this.templateEl = <HTMLTemplateElement>(
+      document.getElementById('project-list')
+    );
+    this.hostEl = <HTMLDivElement>document.getElementById('app');
+
+    const importedNode = document.importNode(this.templateEl.content, true);
+    this.listElement = <HTMLFormElement>importedNode.firstElementChild;
+    this.listElement.id = this.type + '-project';
+
+    this.configure();
+    this.attach();
+  }
+  private attach() {
+    this.hostEl.insertAdjacentElement('beforeend', this.listElement);
+  }
+
+  private configure() {
+    const listId = `${this.type}-projects`;
+    this.listElement.querySelector('ul')!.id = listId;
+    this.listElement.querySelector('h2')!.innerText =
+      this.type.toUpperCase() + ' PROJECTS';
+  }
+}
 new ProjectInput();
+
+new ProjectList('active');

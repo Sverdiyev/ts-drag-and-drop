@@ -1,3 +1,30 @@
+class ProjectState {
+  private projects: any[] = [];
+
+  private static instance: ProjectState;
+  private constructor() {}
+
+  static getInstance() {
+    if (this.instance) {
+      return this.instance;
+    }
+    this.instance = new ProjectState();
+    return this.instance;
+  }
+  addProject(title: string, description: string, nOfPeople: number) {
+    const newPrj = {
+      id: Math.random().toString(),
+      title,
+      description,
+      people: nOfPeople,
+    };
+
+    this.projects.push(newPrj);
+  }
+}
+
+const PrjState = ProjectState.getInstance();
+
 class ProjectInput {
   templateEl: HTMLTemplateElement;
   hostEl: HTMLDivElement;
@@ -28,8 +55,8 @@ class ProjectInput {
   private submitHandler(e: Event) {
     e.preventDefault();
     const userInput = this.gatherInputs();
-    console.log('🚀 ~ submitHandler ~ userInput', userInput);
 
+    PrjState.addProject(...userInput);
     this.clearInputs();
   }
   private configure() {
@@ -39,7 +66,7 @@ class ProjectInput {
   private gatherInputs(): [string, string, number] {
     const title = this.titleInputEl.value;
     const description = this.descriptionInputEl.value;
-    const people = this.descriptionInputEl.value;
+    const people = this.peopleInputEl.value;
     return [title, description, +people];
   }
 

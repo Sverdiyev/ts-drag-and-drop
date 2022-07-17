@@ -67,7 +67,7 @@ class ProjectList {
 
     const importedNode = document.importNode(this.templateEl.content, true);
     this.listElement = <HTMLFormElement>importedNode.firstElementChild;
-    this.listElement.id = this.type + '-project';
+    this.listElement.id = this.type + '-projects';
 
     this.configure();
     this.attach();
@@ -85,4 +85,5 @@ class ProjectList {
 }
 new ProjectInput();
 
-new ProjectList('active');
+const activePrj = new ProjectList('active');
+const finishedPrj = new ProjectList('finished');

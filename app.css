@@ -68,11 +68,11 @@ button:active {
   align-items: center;
 }
 
-#finished-projects {
+#finished-projects-list {
   border-color: #0044ff;
 }
 
-#finished-projects header {
+#finished-projects-list header {
   background: #0044ff;
 }
 
@@ -98,7 +98,7 @@ button:active {
   margin: 0.5rem 0;
 }
 
-#finished-projects li h2 {
+#finished-projects-list li h2 {
   color: #0044ff;
 }
 
@@ -115,7 +115,7 @@ button:active {
   background: #ffe3ee;
 }
 
-#finished-projects .droppable {
+#finished-projects-list .droppable {
   background: #d6e1ff;
 }
 

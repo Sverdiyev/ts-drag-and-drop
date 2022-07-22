@@ -24,6 +24,10 @@ class ProjectState {
     };
 
     this.projects.push(newPrj);
+
+    for (const listenerFn of this.listeners) {
+      listenerFn(this.projects.slice());
+    }
   }
 }
 
@@ -99,13 +103,15 @@ class ProjectList {
 
     const importedNode = document.importNode(this.templateEl.content, true);
     this.listElement = <HTMLFormElement>importedNode.firstElementChild;
-    this.listElement.id = this.type + '-projects';
+    this.listElement.id = this.type + '-projects-list';
 
     PrjState.addListener((projects: any[]) => {
       this.assignedProjects = projects;
+      this.renderProjects();
     });
 
     this.configure();
+    this.renderProjects();
     this.attach();
   }
   private attach() {
@@ -113,7 +119,7 @@ class ProjectList {
   }
 
   private configure() {
-    const listId = `${this.type}-projects`;
+    const listId = `${this.type}-projects-list`;
     this.listElement.querySelector('ul')!.id = listId;
     this.listElement.querySelector('h2')!.innerText =
       this.type.toUpperCase() + ' PROJECTS';

@@ -122,16 +122,19 @@ class ProjectList {
     const importedNode = document.importNode(this.templateEl.content, true);
     this.listElement = <HTMLFormElement>importedNode.firstElementChild;
 
-    this.listElement.id = this.type + '-projects-list';
+    this.listElement.id = this.type + '-projects';
 
     PrjState.addListener((projects: Project[]) => {
-      this.assignedProjects = projects;
+      this.assignedProjects = projects.filter(
+        (project) => project.status == this.type
+      );
+
       this.renderProjects();
     });
 
+    this.attach();
     this.configure();
     this.renderProjects();
-    this.attach();
   }
   private attach() {
     this.hostEl.insertAdjacentElement('beforeend', this.listElement);
@@ -148,6 +151,7 @@ class ProjectList {
     const listEl = document.getElementById(
       `${this.type}-projects-list`
     )! as HTMLUListElement;
+    listEl.innerHTML = '';
     for (const prjItem of this.assignedProjects) {
       const listItem = document.createElement('li');
       listItem.textContent = prjItem.title;

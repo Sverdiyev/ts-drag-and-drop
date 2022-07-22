@@ -1,7 +1,7 @@
 type Listener = (items: Project[]) => void;
 
 enum ProjectStatus {
-  Actvive,
+  Active,
   Finished,
 }
 
@@ -38,7 +38,7 @@ class ProjectState {
       title,
       description,
       nOfPeople,
-      ProjectStatus.Actvive
+      ProjectStatus.Active
     );
 
     this.projects.push(newPrj);
@@ -113,7 +113,7 @@ class ProjectList {
   listElement: HTMLElement;
   assignedProjects: Project[] = [];
 
-  constructor(private type: 'active' | 'finished') {
+  constructor(private type: ProjectStatus) {
     this.templateEl = <HTMLTemplateElement>(
       document.getElementById('project-list')
     );
@@ -140,7 +140,7 @@ class ProjectList {
     const listId = `${this.type}-projects-list`;
     this.listElement.querySelector('ul')!.id = listId;
     this.listElement.querySelector('h2')!.innerText =
-      this.type.toUpperCase() + ' PROJECTS';
+      this.type.toString().toUpperCase() + ' PROJECTS';
   }
 
   private renderProjects() {
@@ -156,5 +156,5 @@ class ProjectList {
 }
 
 const prjInput = new ProjectInput();
-const activePrj = new ProjectList('active');
-const finishedPrj = new ProjectList('finished');
+const activePrj = new ProjectList(ProjectStatus.Active);
+const finishedPrj = new ProjectList(ProjectStatus.Finished);

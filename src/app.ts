@@ -3,7 +3,11 @@ class ProjectState {
 
   private static instance: ProjectState;
   private constructor() {}
+  private listeners: Function[] = [];
 
+  addListener(listenerCb: Function) {
+    this.listeners.push(listenerCb);
+  }
   static getInstance() {
     if (this.instance) {
       return this.instance;
@@ -85,6 +89,7 @@ class ProjectList {
   templateEl: HTMLTemplateElement;
   hostEl: HTMLDivElement;
   listElement: HTMLElement;
+  assignedProjects: any[] = [];
 
   constructor(private type: 'active' | 'finished') {
     this.templateEl = <HTMLTemplateElement>(
@@ -95,6 +100,10 @@ class ProjectList {
     const importedNode = document.importNode(this.templateEl.content, true);
     this.listElement = <HTMLFormElement>importedNode.firstElementChild;
     this.listElement.id = this.type + '-projects';
+
+    PrjState.addListener((projects: any[]) => {
+      this.assignedProjects = projects;
+    });
 
     this.configure();
     this.attach();
@@ -109,8 +118,19 @@ class ProjectList {
     this.listElement.querySelector('h2')!.innerText =
       this.type.toUpperCase() + ' PROJECTS';
   }
-}
-new ProjectInput();
 
+  private renderProjects() {
+    const listEl = document.getElementById(
+      `${this.type}-projects-list`
+    )! as HTMLUListElement;
+    for (const prjItem of this.assignedProjects) {
+      const listItem = document.createElement('li');
+      listItem.textContent = prjItem.title;
+      listEl.appendChild(listItem);
+    }
+  }
+}
+
+const prjInput = new ProjectInput();
 const activePrj = new ProjectList('active');
 const finishedPrj = new ProjectList('finished');

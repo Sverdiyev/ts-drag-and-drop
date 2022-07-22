@@ -85,31 +85,22 @@ class ProjectState {
 
 const PrjState = ProjectState.getInstance();
 
-class ProjectInput {
-  templateEl: HTMLTemplateElement;
-  hostEl: HTMLDivElement;
-  formEl: HTMLFormElement;
+class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
   titleInputEl: HTMLInputElement;
   descriptionInputEl: HTMLInputElement;
   peopleInputEl: HTMLInputElement;
 
   constructor() {
-    this.templateEl = <HTMLTemplateElement>(
-      document.getElementById('project-input')
-    );
-    this.hostEl = <HTMLDivElement>document.getElementById('app');
+    super('project-input', 'app', true, 'user-input');
 
-    const importedNode = document.importNode(this.templateEl.content, true);
-    this.formEl = <HTMLFormElement>importedNode.firstElementChild;
-    this.formEl.id = 'user-input';
-
-    this.titleInputEl = <HTMLInputElement>this.formEl.querySelector('#title');
+    this.titleInputEl = <HTMLInputElement>this.element.querySelector('#title');
     this.descriptionInputEl = <HTMLInputElement>(
-      this.formEl.querySelector('#description')
+      this.element.querySelector('#description')
     );
-    this.peopleInputEl = <HTMLInputElement>this.formEl.querySelector('#people');
+    this.peopleInputEl = <HTMLInputElement>(
+      this.element.querySelector('#people')
+    );
     this.configure();
-    this.attach();
   }
 
   private submitHandler(e: Event) {
@@ -119,9 +110,10 @@ class ProjectInput {
     PrjState.addProject(...userInput);
     this.clearInputs();
   }
-  private configure() {
-    this.formEl.addEventListener('submit', this.submitHandler.bind(this));
+  configure() {
+    this.element.addEventListener('submit', this.submitHandler.bind(this));
   }
+  renderContent(): void {}
 
   private gatherInputs(): [string, string, number] {
     const title = this.titleInputEl.value;
@@ -134,10 +126,6 @@ class ProjectInput {
     this.titleInputEl.value = '';
     this.descriptionInputEl.value = '';
     this.peopleInputEl.value = '';
-  }
-
-  private attach() {
-    this.hostEl.insertAdjacentElement('afterbegin', this.formEl);
   }
 }
 

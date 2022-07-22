@@ -1,8 +1,8 @@
 type Listener = (items: Project[]) => void;
 
 enum ProjectStatus {
-  Active,
-  Finished,
+  active,
+  finished,
 }
 
 class Project {
@@ -38,7 +38,7 @@ class ProjectState {
       title,
       description,
       nOfPeople,
-      ProjectStatus.Active
+      ProjectStatus.active
     );
 
     this.projects.push(newPrj);
@@ -121,7 +121,9 @@ class ProjectList {
 
     const importedNode = document.importNode(this.templateEl.content, true);
     this.listElement = <HTMLFormElement>importedNode.firstElementChild;
-    this.listElement.id = this.type + '-projects-list';
+    const typeName = ProjectStatus[this.type];
+
+    this.listElement.id = typeName + '-projects-list';
 
     PrjState.addListener((projects: Project[]) => {
       this.assignedProjects = projects;
@@ -137,15 +139,19 @@ class ProjectList {
   }
 
   private configure() {
-    const listId = `${this.type}-projects-list`;
+    const type = ProjectStatus[this.type];
+    console.log('🚀 ~ configure ~ type', type);
+    const listId = `${type}-projects-list`;
     this.listElement.querySelector('ul')!.id = listId;
     this.listElement.querySelector('h2')!.innerText =
-      this.type.toString().toUpperCase() + ' PROJECTS';
+      type.toUpperCase() + ' PROJECTS';
   }
 
   private renderProjects() {
+    const type = ProjectStatus[this.type];
+
     const listEl = document.getElementById(
-      `${this.type}-projects-list`
+      `${type}-projects-list`
     )! as HTMLUListElement;
     for (const prjItem of this.assignedProjects) {
       const listItem = document.createElement('li');
@@ -156,5 +162,5 @@ class ProjectList {
 }
 
 const prjInput = new ProjectInput();
-const activePrj = new ProjectList(ProjectStatus.Active);
-const finishedPrj = new ProjectList(ProjectStatus.Finished);
+const activePrj = new ProjectList(ProjectStatus.active);
+const finishedPrj = new ProjectList(ProjectStatus.finished);

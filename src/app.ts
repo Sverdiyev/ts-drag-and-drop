@@ -1,3 +1,13 @@
+interface Draggable {
+  dragStartHandler(event: DragEvent): void;
+  dragEndHandler(event: DragEvent): void;
+}
+interface DragTarget {
+  dragOverHandler(event: DragEvent): void;
+  dropHandler(event: DragEvent): void;
+  dragLeaveHandler(event: DragEvent): void;
+}
+
 abstract class Component<T extends HTMLElement, U extends HTMLElement> {
   templateEl: HTMLTemplateElement;
   hostEl: T;
@@ -180,7 +190,10 @@ class ProjectList {
   }
 }
 
-class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+class ProjectItem
+  extends Component<HTMLUListElement, HTMLLIElement>
+  implements Draggable
+{
   get people() {
     if (this.project.people === 1) return '1 person';
     return `${this.project.people} people`;
@@ -188,12 +201,25 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
   constructor(hostId: string, private project: Project) {
     super('single-project', hostId, false, project.id);
     this.project = project;
+    this.configure();
     this.renderContent();
   }
-  protected configure() {}
+  dragStartHandler = (event: DragEvent) => {
+    console.log('dragStart');
+    console.log(this, event);
+  };
+
+  dragEndHandler = (event: DragEvent) => {
+    console.log('drag End');
+    console.log(this, event);
+  };
+  protected configure() {
+    this.element.addEventListener('dragstart', this.dragStartHandler);
+    this.element.addEventListener('dragend', this.dragEndHandler);
+  }
   protected renderContent() {
     this.element.querySelector('h2')!.textContent = this.project.title;
-    this.element.querySelector('h3')!.textContent = this.people + 'assigned';
+    this.element.querySelector('h3')!.textContent = this.people + ' assigned';
     this.element.querySelector('p')!.textContent = this.project.description;
   }
 }

@@ -139,47 +139,42 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
   }
 }
 
-class ProjectList {
-  templateEl: HTMLTemplateElement;
-  hostEl: HTMLDivElement;
-  listElement: HTMLElement;
+class ProjectList
+  extends Component<HTMLDivElement, HTMLElement>
+  implements DragTarget
+{
   assignedProjects: Project[] = [];
 
   constructor(private type: ProjectStatus) {
-    this.templateEl = <HTMLTemplateElement>(
-      document.getElementById('project-list')
-    );
-    this.hostEl = <HTMLDivElement>document.getElementById('app');
+    super('project-list', 'app', false, type + '-projects');
 
     const importedNode = document.importNode(this.templateEl.content, true);
-    this.listElement = <HTMLFormElement>importedNode.firstElementChild;
-
-    this.listElement.id = this.type + '-projects';
+    this.element = <HTMLFormElement>importedNode.firstElementChild;
 
     PrjState.addListener((projects: Project[]) => {
       this.assignedProjects = projects.filter(
         (project) => project.status == this.type
       );
 
-      this.renderProjects();
+      this.renderContent();
     });
 
-    this.attach();
     this.configure();
-    this.renderProjects();
-  }
-  private attach() {
-    this.hostEl.insertAdjacentElement('beforeend', this.listElement);
+    this.renderContent();
   }
 
-  private configure() {
+  dragLeaveHandler = (event: DragEvent) => {};
+  dragOverHandler = (event: DragEvent) => {};
+  dropHandler = (event: DragEvent) => {};
+
+  protected configure() {
     const listId = `${this.type}-projects-list`;
-    this.listElement.querySelector('ul')!.id = listId;
-    this.listElement.querySelector('h2')!.innerText =
+    this.element.querySelector('ul')!.id = listId;
+    this.element.querySelector('h2')!.innerText =
       this.type.toUpperCase() + ' PROJECTS';
   }
 
-  private renderProjects() {
+  protected renderContent() {
     const listEl = document.getElementById(
       `${this.type}-projects-list`
     )! as HTMLUListElement;

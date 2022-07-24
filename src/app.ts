@@ -181,6 +181,10 @@ class ProjectList {
 }
 
 class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+  get people() {
+    if (this.project.people === 1) return '1 person';
+    return `${this.project.people} people`;
+  }
   constructor(hostId: string, private project: Project) {
     super('single-project', hostId, false, project.id);
     this.project = project;
@@ -189,8 +193,7 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
   protected configure() {}
   protected renderContent() {
     this.element.querySelector('h2')!.textContent = this.project.title;
-    this.element.querySelector('h3')!.textContent =
-      this.project.people.toString();
+    this.element.querySelector('h3')!.textContent = this.people + 'assigned';
     this.element.querySelector('p')!.textContent = this.project.description;
   }
 }

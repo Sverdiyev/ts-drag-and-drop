@@ -160,16 +160,14 @@ class ProjectList
     this.renderContent();
   }
 
-  dragLeaveHandler = (event: DragEvent) => {
-    console.log('🚀 ~ event', event);
+  dragLeaveHandler = (_: DragEvent) => {
+    this.element.querySelector('ul')!.classList.remove('droppable');
   };
-  dragOverHandler = (event: DragEvent) => {
-    console.log('🚀 ~ event', event);
-
+  dragOverHandler = (_: DragEvent) => {
     this.element.querySelector('ul')!.classList.add('droppable');
   };
-  dropHandler = (event: DragEvent) => {
-    console.log('🚀 ~ event', event);
+  dropHandler = (_: DragEvent) => {
+    this.element.querySelector('ul')!.classList.remove('droppable');
   };
 
   protected configure() {

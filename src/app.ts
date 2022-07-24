@@ -147,15 +147,12 @@ class ProjectList
 
   constructor(private type: ProjectStatus) {
     super('project-list', 'app', false, type + '-projects');
-
-    const importedNode = document.importNode(this.templateEl.content, true);
-    this.element = <HTMLFormElement>importedNode.firstElementChild;
+    console.log(this.element);
 
     PrjState.addListener((projects: Project[]) => {
       this.assignedProjects = projects.filter(
         (project) => project.status == this.type
       );
-
       this.renderContent();
     });
 
@@ -163,21 +160,32 @@ class ProjectList
     this.renderContent();
   }
 
-  dragLeaveHandler = (event: DragEvent) => {};
-  dragOverHandler = (event: DragEvent) => {};
-  dropHandler = (event: DragEvent) => {};
+  dragLeaveHandler = (event: DragEvent) => {
+    console.log('🚀 ~ event', event);
+  };
+  dragOverHandler = (event: DragEvent) => {
+    console.log('🚀 ~ event', event);
+
+    this.element.querySelector('ul')!.classList.add('droppable');
+  };
+  dropHandler = (event: DragEvent) => {
+    console.log('🚀 ~ event', event);
+  };
 
   protected configure() {
     const listId = `${this.type}-projects-list`;
     this.element.querySelector('ul')!.id = listId;
     this.element.querySelector('h2')!.innerText =
       this.type.toUpperCase() + ' PROJECTS';
+
+    this.element.addEventListener('dragover', this.dragOverHandler);
+    this.element.addEventListener('drop', this.dropHandler);
+    this.element.addEventListener('dragleave', this.dragLeaveHandler);
   }
 
   protected renderContent() {
-    const listEl = document.getElementById(
-      `${this.type}-projects-list`
-    )! as HTMLUListElement;
+    const listId = `${this.type}-projects-list`;
+    const listEl = document.getElementById(listId)! as HTMLUListElement;
     listEl.innerHTML = '';
     for (const prjItem of this.assignedProjects) {
       new ProjectItem(`${this.type}-projects-list`, prjItem);

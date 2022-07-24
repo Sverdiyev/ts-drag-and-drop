@@ -91,6 +91,7 @@ class ProjectState {
       listenerFn(this.projects.slice());
     }
   }
+  moveProject(id: string, type: ProjectStatus) {}
 }
 
 const PrjState = ProjectState.getInstance();
@@ -147,7 +148,6 @@ class ProjectList
 
   constructor(private type: ProjectStatus) {
     super('project-list', 'app', false, type + '-projects');
-    console.log(this.element);
 
     PrjState.addListener((projects: Project[]) => {
       this.assignedProjects = projects.filter(
@@ -163,11 +163,14 @@ class ProjectList
   dragLeaveHandler = (_: DragEvent) => {
     this.element.querySelector('ul')!.classList.remove('droppable');
   };
-  dragOverHandler = (_: DragEvent) => {
+  dragOverHandler = (event: DragEvent) => {
+    event.preventDefault();
+
     this.element.querySelector('ul')!.classList.add('droppable');
   };
-  dropHandler = (_: DragEvent) => {
+  dropHandler = (event: DragEvent) => {
     this.element.querySelector('ul')!.classList.remove('droppable');
+    const prjId = event.dataTransfer?.getData('text/plain');
   };
 
   protected configure() {
@@ -206,14 +209,11 @@ class ProjectItem
     this.renderContent();
   }
   dragStartHandler = (event: DragEvent) => {
-    console.log('dragStart');
-    console.log(this, event);
+    event.dataTransfer!.setData('text/plain', this.project.id);
+    event.dataTransfer!.effectAllowed = 'move';
   };
 
-  dragEndHandler = (event: DragEvent) => {
-    console.log('drag End');
-    console.log(this, event);
-  };
+  dragEndHandler = (_: DragEvent) => {};
   protected configure() {
     this.element.addEventListener('dragstart', this.dragStartHandler);
     this.element.addEventListener('dragend', this.dragEndHandler);

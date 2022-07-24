@@ -90,8 +90,20 @@ class ProjectState {
     for (const listenerFn of this.listeners) {
       listenerFn(this.projects.slice());
     }
+    this.updateListeners();
   }
-  moveProject(id: string, type: ProjectStatus) {}
+  moveProject(projectId: string, newStatus: ProjectStatus) {
+    const prj = this.projects.find((prj) => prj.id === projectId);
+    if (!prj || newStatus === prj?.status) return;
+    prj.status = newStatus;
+    this.updateListeners();
+  }
+
+  private updateListeners() {
+    for (const listenerFn of this.listeners) {
+      listenerFn(this.projects.slice());
+    }
+  }
 }
 
 const PrjState = ProjectState.getInstance();
@@ -171,6 +183,8 @@ class ProjectList
   dropHandler = (event: DragEvent) => {
     this.element.querySelector('ul')!.classList.remove('droppable');
     const prjId = event.dataTransfer?.getData('text/plain');
+    if (!prjId) return;
+    PrjState.moveProject(prjId, this.type);
   };
 
   protected configure() {
